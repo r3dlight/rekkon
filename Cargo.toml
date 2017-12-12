@@ -1,0 +1,6 @@
+[package]
+name = "rekkon"
+version = "0.1.0"
+authors = ["r3dlight"]
+
+[dependencies]
