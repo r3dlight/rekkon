@@ -25,9 +25,9 @@ fn main() {
     //println!("{:?}",
      //       settings.try_into::<HashMap<String, String>>().unwrap());
 
-    println!("{:?}", settings.get_str("debug").unwrap());
-    println!("{:?}", settings.get_str("ListenOn").unwrap());
-    println!("{:?}", settings.get_str("NumberOfThreads").unwrap());
+    //println!("{:?}", settings.get_str("debug").unwrap());
+    //println!("{:?}", settings.get_str("ListenOn").unwrap());
+    //println!("{:?}", settings.get_str("NumberOfThreads").unwrap());
     let listen_on = settings.get_str("ListenOn").unwrap();
     let _debug = settings.get_str("Debug").unwrap();
     let number_of_threads = settings.get_str("NumberOfThreads").unwrap();
