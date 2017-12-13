@@ -1,4 +1,7 @@
 extern crate rekkon;
+extern crate config;
+
+//use std::collections::HashMap;
 use rekkon::ThreadPool;
 
 use std::io::prelude::*;
@@ -9,8 +12,28 @@ use std::thread;
 use std::time::Duration;
 
 fn main() {
-    let listener = TcpListener::bind("127.0.0.1:8080").unwrap();
-    let pool = ThreadPool::new(4);
+
+    let mut settings = config::Config::default();
+    settings
+        // Add in `./Settings.toml`
+        .merge(config::File::with_name("config")).unwrap()
+        // Add in settings from the environment (with a prefix of APP)
+        // Eg.. `APP_DEBUG=1 ./target/app` would set the `debug` key
+        .merge(config::Environment::with_prefix("APP")).unwrap();
+
+    // Print out our settings (as a HashMap)
+    //println!("{:?}",
+     //       settings.try_into::<HashMap<String, String>>().unwrap());
+
+    println!("{:?}", settings.get_str("debug").unwrap());
+    println!("{:?}", settings.get_str("ListenOn").unwrap());
+    println!("{:?}", settings.get_str("NumberOfThreads").unwrap());
+    let listen_on = settings.get_str("ListenOn").unwrap();
+    let _debug = settings.get_str("Debug").unwrap();
+    let number_of_threads = settings.get_str("NumberOfThreads").unwrap();
+    //println!("{:?}", listen_on);
+    let listener = TcpListener::bind(listen_on).unwrap();
+    let pool = ThreadPool::new(number_of_threads.parse().unwrap());
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();

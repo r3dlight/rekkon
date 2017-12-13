@@ -1,0 +1,4 @@
+debug = false
+NumberOfThreads = 5
+ListenOn = "127.0.0.1:8080"
+key = "189rjfadoisfj8923fjio"
