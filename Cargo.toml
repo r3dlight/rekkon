@@ -5,3 +5,5 @@ authors = ["r3dlight"]
 
 [dependencies]
 config="*"
+simplelog="*"
+log="*"

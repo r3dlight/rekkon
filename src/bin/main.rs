@@ -1,7 +1,7 @@
+#[macro_use] extern crate log;
 extern crate rekkon;
 extern crate config;
-
-//use std::collections::HashMap;
+extern crate simplelog;
 use rekkon::ThreadPool;
 
 use std::io::prelude::*;
@@ -10,8 +10,17 @@ use std::net::TcpStream;
 use std::fs::File;
 use std::thread;
 use std::time::Duration;
+use simplelog::*;
+
 
 fn main() {
+
+    CombinedLogger::init(
+        vec![
+            TermLogger::new(LogLevelFilter::Warn, Config::default()).unwrap(),
+            WriteLogger::new(LogLevelFilter::Info, Config::default(), File::create("rekkon.log").unwrap()),
+        ]
+    ).unwrap();
 
     let mut settings = config::Config::default();
     settings
@@ -21,16 +30,16 @@ fn main() {
         // Eg.. `APP_DEBUG=1 ./target/app` would set the `debug` key
         .merge(config::Environment::with_prefix("APP")).unwrap();
 
-    // Print out our settings (as a HashMap)
-    //println!("{:?}",
-     //       settings.try_into::<HashMap<String, String>>().unwrap());
-
     //println!("{:?}", settings.get_str("debug").unwrap());
+    info!("Parsing config.toml.");
     //println!("{:?}", settings.get_str("ListenOn").unwrap());
     //println!("{:?}", settings.get_str("NumberOfThreads").unwrap());
     let listen_on = settings.get_str("ListenOn").unwrap();
+    info!("Rekkon will bind to : {:?}", settings.get_str("ListenOn").unwrap());
     let _debug = settings.get_str("Debug").unwrap();
+    info!("Debug is set to : {:?}", settings.get_str("Debug").unwrap());
     let number_of_threads = settings.get_str("NumberOfThreads").unwrap();
+    info!("Worker pool is set to : {:?}", settings.get_str("NumberOfThreads").unwrap());
     //println!("{:?}", listen_on);
     let listener = TcpListener::bind(listen_on).unwrap();
     let pool = ThreadPool::new(number_of_threads.parse().unwrap());
